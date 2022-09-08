@@ -46,7 +46,7 @@ years <- year_start:(year_start+window_width-1)
 
 # Rouler modèle pour chaque année
 for(j in 0:(year_end-years[length(years)])) {
-  
+
   ## Année du modèle
   year <- mean((years+j))
 
@@ -72,7 +72,7 @@ for(j in 0:(year_end-years[length(years)])) {
 
   ## Faire un stack avec les deux rasters et convertir en SPDF
   obs <- raster::stack(succ, trials)
-  names(obs) <- c("observations", "presences")
+  names(obs) <- c("presences", "observations")
   obs <- as(obs, "SpatialPointsDataFrame")
 
   ## Enlever cellules où il n'y aucun trials
@@ -197,7 +197,7 @@ for(j in 0:(year_end-years[length(years)])) {
   names(map) <- paste0(year)
 
   ## Stack des cartes de chaque année ensemble
-  if(exists("map_stack_pocc")) {
+  if(exists("sdms")) {
     sdms <- raster::stack(sdms, map)
   } else {
     sdms <- raster::stack(map)
@@ -205,7 +205,7 @@ for(j in 0:(year_end-years[length(years)])) {
 
   ## Si c'est la dernière année, sauvegarder le stack
   if(j == year_end-years[length(years)]) {
-    raster::writeRaster(map_stack_pocc, 
+    raster::writeRaster(sdms, 
                         paste0("output/",species,"/maps_pocc"))
   }
 
@@ -225,17 +225,14 @@ for(j in 0:(year_end-years[length(years)])) {
 #---------- Calculer le BDI ----------#
 
 # Dataframe avec années, somme des p(occ) et valeur du bdi
-bdi <- cbind(
-  1992:2018,
-  raster::cellStats(sdms, stat = "sum"),
-  c(1, rep(NA, 26))
-)
-colnames(areas) <- c("years", "sum_pocc", "bdi")
+bdi <- data.frame(years = 1992:2018,
+                  sum_pocc = raster::cellStats(sdms, stat = "sum"),
+                  index = c(1, rep(NA, 26)))
 
 # Pas de besoin de faire de log ratio puisqu'on calcul le BDI par espèce
 for(i in 2:nrow(bdi)) {
-  bdi[i,"bdi"] <- bdi[i-1,"bdi"]*(bdi[i,"sum_pocc"]/
-                                bdi[i-1,"sum_pocc"])
+  bdi[i,"index"] <- bdi[i-1,"index"]*(bdi[i,"sum_pocc"]/
+                                      bdi[i-1,"sum_pocc"])
 }
 
 write.csv(bdi, paste0("output/",species,"/bdi.csv"))
