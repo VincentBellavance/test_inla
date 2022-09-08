@@ -1,0 +1,27 @@
+[general]
+creator=R package 'raster'
+created=2022-08-11 17:55:25
+[data]
+datatype=FLT4S
+byteorder=little
+nbands=1
+bandorder=BIL
+categorical=FALSE
+minvalue=1
+maxvalue=1
+nodatavalue=-3.4e+38
+[legend]
+legendtype=
+values=
+color=
+[description]
+layername=none
+[georeference]
+nrows=172
+ncols=206
+xmin=-822.8913046494
+ymin=-912.685694946222
+xmax=1237.1086953506
+ymax=807.314305053779
+projection=+proj=lcc +lat_0=47 +lon_0=-75 +lat_1=49 +lat_2=62 +x_0=0 +y_0=0 +datum=NAD83 +units=km +no_defs
+wkt=PROJCRS["unknown",    BASEGEOGCRS["unknown",        DATUM["North American Datum 1983",            ELLIPSOID["GRS 1980",6378137,298.257222101,                LENGTHUNIT["metre",1]],            ID["EPSG",6269]],        PRIMEM["Greenwich",0,            ANGLEUNIT["degree",0.0174532925199433],            ID["EPSG",8901]]],    CONVERSION["unknown",        METHOD["Lambert Conic Conformal (2SP)",            ID["EPSG",9802]],        PARAMETER["Latitude of false origin",47,            ANGLEUNIT["degree",0.0174532925199433],            ID["EPSG",8821]],        PARAMETER["Longitude of false origin",-75,            ANGLEUNIT["degree",0.0174532925199433],            ID["EPSG",8822]],        PARAMETER["Latitude of 1st standard parallel",49,            ANGLEUNIT["degree",0.0174532925199433],            ID["EPSG",8823]],        PARAMETER["Latitude of 2nd standard parallel",62,            ANGLEUNIT["degree",0.0174532925199433],            ID["EPSG",8824]],        PARAMETER["Easting at false origin",0,            LENGTHUNIT["kilometre",1000],            ID["EPSG",8826]],        PARAMETER["Northing at false origin",0,            LENGTHUNIT["kilometre",1000],            ID["EPSG",8827]]],    CS[Cartesian,2],        AXIS["(E)",east,            ORDER[1],            LENGTHUNIT["kilometre",1000,                ID["EPSG",9036]]],        AXIS["(N)",north,            ORDER[2],            LENGTHUNIT["kilometre",1000,                ID["EPSG",9036]]]]

@@ -1,0 +1,26 @@
+[general]
+creator=R package 'raster'
+created=2022-09-08 13:30:39
+[georeference]
+nrows=198
+ncols=206
+xmin=-822.8913046494
+ymin=-912.685694946222
+xmax=1237.1086953506
+ymax=1067.31430505378
+projection=+proj=lcc +lat_0=47 +lon_0=-75 +lat_1=49 +lat_2=62 +x_0=0 +y_0=0 +datum=NAD83 +units=km +no_defs
+[data]
+datatype=FLT4S
+byteorder=little
+nbands=1
+bandorder=BIL
+categorical=FALSE
+minvalue=1
+maxvalue=1
+nodatavalue=-3.4e+38
+[legend]
+legendtype=
+values=
+color=
+[description]
+layername=none
