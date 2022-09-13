@@ -31,6 +31,8 @@ mesh <- INLA::inla.mesh.2d(boundary = study_extent,
                            offset = c(edge, edge*2), 
                            cutoff = edge/2, 
                            crs = raster::crs(study_extent))
+                           
+saveRDS(mesh, paste0("data/",species,"/mesh.rds"))
 
 spde <- INLA::inla.spde2.pcmatern(mesh=mesh,
                                   alpha=2,
@@ -203,10 +205,59 @@ for(j in 0:(year_end-years[length(years)])) {
     sdms <- raster::stack(map)
   }
 
+  ## Prédictions avec 0.025 & 0.975 quant
+  mapPred025 <- inla.mesh.project(mapBasis, 
+                              model$summary.fitted.values[["0.025quant"]][ID])
+  mapPred975 <- inla.mesh.project(mapBasis, 
+                              model$summary.fitted.values[["0.975quant"]][ID])
+
+  ## Convertir en raster
+  mapRaster025 <- raster::raster(t(mapPred025[,ncol(mapPred025):1]),
+                                xmn = min(mapBasis$x), xmx = max(mapBasis$x), 
+                                ymn = min(mapBasis$y), ymx = max(mapBasis$y),
+                                crs = mesh$crs)
+  mapRaster975 <- raster::raster(t(mapPred975[,ncol(mapPred975):1]),
+                                xmn = min(mapBasis$x), xmx = max(mapBasis$x), 
+                                ymn = min(mapBasis$y), ymx = max(mapBasis$y),
+                                crs = mesh$crs)
+
+
+  ## Crop et mask pour garder le Qc seulement
+  mapRaster025 <- terra::crop(terra::mask(terra::rast(mapRaster025), 
+                                         terra::vect(qc)), 
+                              terra::vect(qc))
+  mapRaster975 <- terra::crop(terra::mask(terra::rast(mapRaster975), 
+                                          terra::vect(qc)), 
+                              terra::vect(qc))
+
+
+  ## Reconvertir en raster
+  map025 <- raster::raster(mapRaster025)
+  names(map025) <- paste0(year)
+  map975 <- raster::raster(mapRaster975)
+  names(map975) <- paste0(year)
+
+  ## Stack des cartes de chaque année ensemble
+  if(exists("sdms025")) {
+    sdms025 <- raster::stack(sdms025, map025)
+  } else {
+    sdms025 <- raster::stack(map025)
+  }
+  if(exists("sdms975")) {
+    sdms975 <- raster::stack(sdms975, map975)
+  } else {
+    sdms975 <- raster::stack(map975)
+  }
+
   ## Si c'est la dernière année, sauvegarder le stack
   if(j == year_end-years[length(years)]) {
     raster::writeRaster(sdms, 
                         paste0("output/",species,"/maps_pocc"))
+    raster::writeRaster(sdms025, 
+                        paste0("output/",species,"/maps_025"))
+    raster::writeRaster(sdms975, 
+                        paste0("output/",species,"/maps_975"))
+
   }
 
   ## Garder le modèle précédent et nettoyer
